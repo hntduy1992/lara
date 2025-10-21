@@ -28,7 +28,10 @@ const vuetify = createVuetify({
     // ssr: true,
 })
 // End Vuetify
-
+// Toastifu
+import Vue3Toastify from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+// End Toastify
 
 createInertiaApp({
     resolve: async (name) => {
@@ -47,6 +50,9 @@ createInertiaApp({
         const app = createApp({render: () => h(App, props)})
         app.use(plugin)
         app.use(vuetify)
+        app.use(Vue3Toastify, {
+            autoClose: 2000
+        })
         app.mount(el)
     },
 })

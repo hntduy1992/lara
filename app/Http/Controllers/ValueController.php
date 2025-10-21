@@ -11,8 +11,7 @@ class ValueController extends Controller
 {
     public function index()
     {
-        $data = User::all();
-        return Inertia::render('Index', ['data' => $data]);
+        return Inertia::render('Index', []);
     }
 
     public function add(Request $request)
@@ -22,5 +21,10 @@ class ValueController extends Controller
             'password' => Hash::make($request->input(['password']))
         ]);
         return redirect()->route('index');
+    }
+
+    public function test(Request $request)
+    {
+        return response()->json(['data' => 'This ok']);
     }
 }

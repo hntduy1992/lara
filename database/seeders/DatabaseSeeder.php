@@ -16,12 +16,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'username' => '',
-            'password' => Hash::make('12345'),
-            'full_name' => 'Administrator',
-            'is_active' => true
+        $this->call([
+            RBACSeeder::class
         ]);
 
+        $user = User::create([
+            'username' => 'admin',
+            'password' => Hash::make('12345'),
+            'ho_ten' => 'Administrator',
+            'is_active' => true
+        ]);
+        $user->assignRole('super-admin');
     }
 }
