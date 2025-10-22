@@ -6,7 +6,7 @@ const page = usePage()
 </script>
 
 <template>
-    <v-btn prepend-icon="mdi-star">Hello</v-btn>
+    Index page
 </template>
 
 <style scoped>

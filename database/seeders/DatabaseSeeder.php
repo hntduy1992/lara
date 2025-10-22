@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            RBACSeeder::class
+            RBACSeeder::class,
+            DepartmentSeed::class
         ]);
 
         $user = User::create([

@@ -13,8 +13,8 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Index', []);
     });
     Route::delete('/logout', [LoginController::class, 'destroy'])->name('logout.post');
-    Route::prefix('tai-khoan')->middleware(['role:super-admin|admin'])->group(function () {
-        Route::get('/test-role', [ValueController::class, 'test'])->name('test');
+    Route::prefix('/department')->middleware(['role:super-admin|admin'])->group(function () {
+//        Route::get('/list')
     });
 });
 
