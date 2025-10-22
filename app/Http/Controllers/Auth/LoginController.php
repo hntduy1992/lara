@@ -13,6 +13,13 @@ use Inertia\Inertia;
 
 class LoginController extends Controller
 {
+
+    public function getLogin(Request $request)
+    {
+        $callback = $request->input('callback');
+        return Inertia::render('LoginPage', ['callback' => $callback]);
+    }
+
     /**
      * @throws ValidationException
      */
@@ -39,7 +46,7 @@ class LoginController extends Controller
             } else {
                 $request->session()->put('flash', ['type' => 'error', 'message' => 'Đăng nhập không thành công!']);
             }
-            return redirect()->intended();
+            return redirect()->intended($request->input('callback'));
         } else {
             throw ValidationException::withMessages(['password' => 'Sai mật khẩu!']);
         }
@@ -53,6 +60,6 @@ class LoginController extends Controller
         $request->session()->invalidate(); // Hủy session
         $request->session()->regenerateToken(); // Tạo lại CSRF token
         // Chuyển hướng về trang chủ
-        return redirect()->intended();
+        return redirect()->intended('/');
     }
 }

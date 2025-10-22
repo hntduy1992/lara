@@ -5,16 +5,21 @@ use App\Http\Controllers\ValueController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-
-Route::get('/', [ValueController::class, 'index'])->name('index');
-Route::post('/value/add', [\App\Http\Controllers\ValueController::class, 'add']);
-
+Route::get('/login', [LoginController::class, 'getLogin'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 //protected
-Route::prefix('quan-ly')->middleware('auth')->group(function () {
-    Route::post('/logout', [LoginController::class, 'destroy'])->name('logout.post');
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Index', []);
+    });
+    Route::delete('/logout', [LoginController::class, 'destroy'])->name('logout.post');
     Route::prefix('tai-khoan')->middleware(['role:super-admin|admin'])->group(function () {
         Route::get('/test-role', [ValueController::class, 'test'])->name('test');
     });
 });
 
+
+//Error page
+Route::get('/error-unauthenticated', function () {
+    return Inertia::render('Error', ['message' => 'Bạn không có quyền truy cập nội dung này']);
+});

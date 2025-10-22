@@ -5,7 +5,6 @@ import {usePage} from "@inertiajs/vue3";
 const fav = ref(true)
 const menu = ref(false)
 const message = ref(false)
-const hints = ref(true)
 const page = usePage()
 const user = page.props.auth?.user
 </script>

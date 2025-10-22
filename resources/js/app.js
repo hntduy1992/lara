@@ -4,7 +4,6 @@ import './bootstrap';
 import {createApp, h} from 'vue'
 import {createInertiaApp} from '@inertiajs/vue3'
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
-
 // Vuetify
 import 'vuetify/styles'
 import {createVuetify} from 'vuetify'
@@ -13,7 +12,6 @@ import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
 // Option B — Install via unplugin-fonts + @fontsource (recommended)
 import 'unfonts.css'
-import AuthLayout from "@/Layout/AuthLayout.vue";
 import DefaultLayout from "@/Layout/DefaultLayout.vue";
 
 const vuetify = createVuetify({
