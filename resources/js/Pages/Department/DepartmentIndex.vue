@@ -1,6 +1,7 @@
 <script setup>
-import {ref} from "vue";
-import {router, usePage} from "@inertiajs/vue3";
+import {ref, shallowRef} from "vue";
+import {router, useForm, usePage} from "@inertiajs/vue3";
+import CreateDepartmentForm from "@/Pages/Department/CreateDepartmentForm.vue";
 
 const search = ref('')
 const selected = ref([])
@@ -31,6 +32,16 @@ const items = page.props.departments
 
 function filterText(value, query, item) {
     return value != null && query != null && typeof value === 'string' && value.toString().toLocaleLowerCase().indexOf(query) !== -1
+}
+
+const createDialogState = shallowRef(null)
+const createDepartmentForm = useForm({
+    name: '',
+    parent_id: '',
+});
+
+const OpenCreateDialog = () => {
+    createDialogState.value = true
 }
 </script>
 
@@ -68,15 +79,28 @@ function filterText(value, query, item) {
                         </v-btn>
                     </template>
                 </v-text-field>
-                <v-btn
-                    class="me-2"
-                    prepend-icon="mdi-plus"
-                    rounded="lg"
-                    text="Thêm đơn vị"
-                    border
-                    variant="elevated"
-                    color="primary"
-                ></v-btn>
+                <v-dialog
+                    v-model="createDialogState"
+                    max-width="400"
+                >
+                    <template v-slot:activator="{ props: activatorProps }">
+                        <v-btn
+                            class="me-2"
+                            prepend-icon="mdi-plus"
+                            rounded="lg"
+                            text="Thêm đơn vị"
+                            border
+                            variant="elevated"
+                            color="primary"
+                            v-bind="activatorProps"
+                        ></v-btn>
+                    </template>
+                    <v-card title="THÊM MỚI ĐƠN VỊ">
+                        <v-card-text>
+                            <CreateDepartmentForm v-model:Form="CreateDepartmentForm"></CreateDepartmentForm>
+                        </v-card-text>
+                    </v-card>
+                </v-dialog>
 
                 <v-badge v-if="selected.length" bordered location="top left">
                     <template v-slot:badge>
