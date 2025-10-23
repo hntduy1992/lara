@@ -9,16 +9,23 @@ import 'vuetify/styles'
 import {createVuetify} from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
 // Option B — Install via unplugin-fonts + @fontsource (recommended)
 import 'unfonts.css'
 import DefaultLayout from "@/Layout/DefaultLayout.vue";
+import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
+import {aliases, mdi} from 'vuetify/iconsets/mdi'
+import {fa} from 'vuetify/iconsets/fa'
 
 const vuetify = createVuetify({
     components,
     directives,
     icons: {
-        defaultSet: 'mdi', // This is already the default value - only for display purposes
+        defaultSet: 'mdi',
+        aliases,
+        sets: {
+            mdi,
+            fa,
+        },
     },
     theme: {
         defaultTheme: 'light', // 'light' | 'dark' | 'system'
@@ -26,7 +33,7 @@ const vuetify = createVuetify({
     // ssr: true,
 })
 // End Vuetify
-// Toastifu
+// Toastify
 import Vue3Toastify from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 // End Toastify

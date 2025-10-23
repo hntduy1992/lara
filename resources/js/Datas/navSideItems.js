@@ -1,8 +1,8 @@
 const navSideItems = [
     {
-        index: 1, text: 'Quản trị đơn vị', icon: 'mdi-office-building',name:'department', chidren: [
-            {index: 1, href: '/department-group', text: 'Tổ chức', icon: 'mdi-office-building'},
-            {index: 2, href: '/department', text: 'Đơn vị', icon: 'mdi-office-building'},
+        index: 1, text: 'Quản trị đơn vị', icon: 'mdi-sitemap-outline',name:'department', chidren: [
+            {index: 1, href: '/don-vi', text: 'Đơn vị', icon: 'mdi-home-group'},
+            {index: 2, href: '/tai-khoan', text: 'Tài khoản', icon: 'mdi-account-group'},
         ]
     },
 ]

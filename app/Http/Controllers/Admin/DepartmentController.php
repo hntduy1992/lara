@@ -9,9 +9,10 @@ use Inertia\Inertia;
 
 class DepartmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $department = Department::all();
-        return Inertia::render('Department/DepartmentIndex', ['department' => $department]);
+        $departments = Department::all();
+
+        return Inertia::render('Department/DepartmentIndex', ['departments' => $departments]);
     }
 }

@@ -1,48 +1,108 @@
 <script setup>
 import {ref} from "vue";
-import {router} from "@inertiajs/vue3";
+import {router, usePage} from "@inertiajs/vue3";
 
 const search = ref('')
-const serverItems = ref([])
-const loading = ref(true)
-const totalItems = ref(0)
+const selected = ref([])
+const loading = ref(false)
 const itemsPerPage = ref(5)
 const headers = ref([
     {
-        title: 'Dessert (100g serving)',
-        align: 'start',
-        sortable: false,
+        title: 'Tên đơn vị',
+        sortable: true,
         key: 'name',
     },
-    { title: 'Calories', key: 'calories', align: 'end' },
-    { title: 'Fat (g)', key: 'fat', align: 'end' },
-    { title: 'Carbs (g)', key: 'carbs', align: 'end' },
-    { title: 'Protein (g)', key: 'protein', align: 'end' },
-    { title: 'Iron (%)', key: 'iron', align: 'end' },
+    {
+        title: 'Đơn vị cha',
+        sortable: false,
+        align: 'center',
+        key: 'parent_id',
+    },
+    {
+        title: 'Cấp độ',
+        sortable: true,
+        align: 'center',
+        key: 'level',
+    },
+    {title: 'Actions', key: 'actions', align: 'center', sortable: false, width: '10%'},
 ])
-function loadItems({page, itemsPerPage, sortBy}) {
-    loading.value = true
-    router.get('', {page, itemsPerPage, sortBy}, {
-        onSuccess: (res) => {
-            serverItems.value = res.props.items
-            totalItems.value = res.props.total
-            loading.value = false
-        }
-    })
+const page = usePage()
+const items = page.props.departments
+
+function filterText(value, query, item) {
+    return value != null && query != null && typeof value === 'string' && value.toString().toLocaleLowerCase().indexOf(query) !== -1
 }
 </script>
 
 <template>
-    <v-data-table-server
-        v-model:items-per-page="itemsPerPage"
+    <v-data-table
+        v-model="selected"
         :headers="headers"
-        :items="serverItems"
-        :items-length="totalItems"
-        :loading="loading"
+        :items="items"
         :search="search"
         item-value="name"
-        @update:options="loadItems"
-    ></v-data-table-server>
+        return-object
+        show-select
+        :custom-filter="filterText"
+        :hide-default-footer="items.length<11"
+    >
+        <template v-slot:top>
+            <v-toolbar flat>
+                <v-toolbar-title>
+                    <v-icon color="medium-emphasis" icon="mdi-view-list-outline" size="x-small" start></v-icon>
+                    Danh sách đơn vị
+                </v-toolbar-title>
+                <v-text-field
+                    v-model="search"
+                    label="Search"
+                    variant="outlined"
+                    density="compact"
+                    hide-details
+                    single-line
+                    max-width="300"
+                    class="mr-5"
+                >
+                    <template v-slot:append-inner>
+                        <v-btn prepend-icon="mdi-magnify"
+                               @click="">Tìm
+                        </v-btn>
+                    </template>
+                </v-text-field>
+                <v-btn
+                    class="me-2"
+                    prepend-icon="mdi-plus"
+                    rounded="lg"
+                    text="Thêm đơn vị"
+                    border
+                    variant="elevated"
+                    color="primary"
+                ></v-btn>
+
+                <v-badge v-if="selected.length" bordered location="top left">
+                    <template v-slot:badge>
+                        {{ selected.length }}
+                    </template>
+                    <v-btn
+                        class="me-2"
+                        prepend-icon="mdi-delete-sweep"
+                        rounded="lg"
+                        text="Xóa nhiều"
+                        border
+                        variant="elevated"
+                        color="red"
+                    ></v-btn>
+                </v-badge>
+            </v-toolbar>
+
+        </template>
+        <template v-slot:item.actions="{ item }">
+            <div class="d-flex ga-2 justify-center">
+                <v-btn color="warning" icon="mdi-pencil" variant="text" size="small"></v-btn>
+
+                <v-btn color="red" icon="mdi-delete" size="small" variant="text"></v-btn>
+            </div>
+        </template>
+    </v-data-table>
 </template>
 
 <style scoped>

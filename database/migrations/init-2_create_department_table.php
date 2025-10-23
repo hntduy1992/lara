@@ -10,15 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('department_group', function (Blueprint $table) {
+        Schema::create('departments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-        Schema::create('department', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('department_group_id')->nullable();
             $table->string('name');
             $table->unsignedInteger('parent_id')->nullable();
             $table->integer('level')->default(0);
@@ -32,7 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('department');
-        Schema::dropIfExists('department_group');
+        Schema::dropIfExists('departments');
     }
 };

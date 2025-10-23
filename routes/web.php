@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ValueController;
 use Illuminate\Support\Facades\Route;
@@ -13,8 +14,8 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Index', []);
     });
     Route::delete('/logout', [LoginController::class, 'destroy'])->name('logout.post');
-    Route::prefix('/department')->middleware(['role:super-admin|admin'])->group(function () {
-//        Route::get('/list')
+    Route::prefix('/don-vi')->middleware(['role:super-admin|admin'])->group(function () {
+        Route::get('/', [DepartmentController::class, 'index'])->name('department.index');
     });
 });
 
