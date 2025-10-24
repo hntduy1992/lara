@@ -16,6 +16,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/logout', [LoginController::class, 'destroy'])->name('logout.post');
     Route::prefix('/don-vi')->middleware(['role:super-admin|admin'])->group(function () {
         Route::get('/', [DepartmentController::class, 'index'])->name('department.index');
+        Route::post('/them-moi', [DepartmentController::class, 'store'])->name('department.store');
     });
 });
 

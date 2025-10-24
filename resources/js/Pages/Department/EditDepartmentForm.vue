@@ -6,16 +6,19 @@ import HierarchicalSorter from "@/Services/buildTree.js";
 import {onMounted, ref} from "vue";
 import {toast} from "vue3-toastify";
 
+const props = defineProps({
+    Department: Object
+})
 const page = usePage()
-const items = page.props.departments
+const items = page.props.departments.filter(e=>e.id!==props.Department.id)
 const emit = defineEmits(['updateItems'])
 // Khởi tạo và sắp xếp
 const sorter = new HierarchicalSorter();
 const sortedData = sorter.sort(items);
 const formData = useForm({
-    parent_id: null,
-    name: '',
-    sort: 0
+    parent_id: props.Department.parent_id,
+    name: props.Department.name,
+    sort: props.Department.sort
 })
 const loading = ref(null)
 const submit = () => {
@@ -24,7 +27,7 @@ const submit = () => {
         only: ['departments', 'flash'],
         onSuccess: (res) => {
             toast(res.props.flash.message, {type: res.props.flash.type})
-            emit('updateItems',res.props.departments)
+            emit('updateItems', res.props.departments)
         },
         onFinish: () => {
             loading.value = false
@@ -36,7 +39,6 @@ const updateSort = (e) => {
     formData.sort = Math.max(...child, 0) + 1
 }
 onMounted(() => {
-    updateSort(0)
 })
 </script>
 

@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->unsignedInteger('parent_id')->nullable();
-            $table->integer('level')->default(0);
+            $table->integer('sort')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

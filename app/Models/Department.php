@@ -12,5 +12,5 @@ class Department extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'parent_id', 'level', 'created_at', 'updated_at'];
+    protected $fillable = ['name', 'parent_id', 'sort', 'created_at', 'updated_at'];
 }

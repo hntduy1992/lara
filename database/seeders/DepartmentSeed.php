@@ -11,30 +11,35 @@ class DepartmentSeed extends Seeder
     {
         $du = Department::create([
             'name' => 'Đảng ủy',
-            'parent_id' => 0,
-            'level' => 1
+            'parent_id' =>null,
+            'sort' => 1
         ]);
 
-        Department::create([
+       $ttct = Department::create([
             'name' => 'Trung tâm chính trị',
             'parent_id' => $du->id,
-            'level' => 2
+            'sort' => 1
+        ]);
+       Department::create([
+            'name' => 'Phòng đào tạo',
+            'parent_id' => $ttct->id,
+            'sort' => 1
         ]);
         Department::create([
             'name' => 'Ban xây dựng đảng',
             'parent_id' => $du->id,
-            'level' => 2
+            'sort' => 2
         ]);
 
         $hdnd = Department::create([
             'name' => 'Hội đồng nhân dân',
-            'parent_id' => 0,
-            'level' => 1
+            'parent_id' => null,
+            'sort' => 2
         ]);
         Department::create([
             'name' => 'Ban kinh tế xã hội',
             'parent_id' => $hdnd->id,
-            'level' => 2
+            'sort' => 1
         ]);
     }
 }
