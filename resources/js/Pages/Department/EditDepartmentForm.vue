@@ -23,7 +23,7 @@ const formData = useForm({
 const loading = ref(null)
 const submit = () => {
     loading.value = true
-    formData.post('/don-vi/them-moi', {
+    formData.post(`/don-vi/${props.Department.id}/cap-nhat`, {
         only: ['departments', 'flash'],
         onSuccess: (res) => {
             toast(res.props.flash.message, {type: res.props.flash.type})
@@ -44,7 +44,7 @@ onMounted(() => {
 
 <template>
     <v-card :loading="loading">
-        <v-card-title>
+        <v-card-title class="text-center bg-info" >
             THÔNG TIN ĐƠN VỊ
         </v-card-title>
         <v-card-text>
@@ -70,7 +70,7 @@ onMounted(() => {
                           :error-messages="formData.errors.name"></v-text-field>
             <v-number-input variant="outlined" label="Vị trí" v-model="formData.sort" :min="1" clearable
             ></v-number-input>
-            <v-btn prepend-icon="mdi-home-plus-outline" color="primary" class="w-100" @click="submit">Tạo đơn vị mới
+            <v-btn prepend-icon="mdi-home-plus-outline" color="info" class="w-100" @click="submit">Cập nhật
             </v-btn>
         </v-card-text>
     </v-card>

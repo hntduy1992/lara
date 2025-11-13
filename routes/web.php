@@ -17,6 +17,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/don-vi')->middleware(['role:super-admin|admin'])->group(function () {
         Route::get('/', [DepartmentController::class, 'index'])->name('department.index');
         Route::post('/them-moi', [DepartmentController::class, 'store'])->name('department.store');
+        Route::post('/{id}/cap-nhat', [DepartmentController::class, 'update'])->name('department.update');
+        Route::delete('/{id}/xoa', [DepartmentController::class, 'destroy'])->name('department.destroy');
     });
 });
 

@@ -42,7 +42,7 @@ onMounted(() => {
 
 <template>
     <v-card :loading="loading">
-        <v-card-title>
+        <v-card-title class="text-center bg-primary">
             THÔNG TIN ĐƠN VỊ
         </v-card-title>
         <v-card-text>

@@ -6,11 +6,12 @@ use App\Http\Controllers\Admin\DepartmentController;
 use App\TreeService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
 class Department extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'parent_id', 'sort', 'created_at', 'updated_at'];
 }
