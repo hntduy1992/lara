@@ -6,27 +6,47 @@ import {onMounted, ref} from "vue";
 import {toast} from "vue3-toastify";
 
 const props = defineProps({
-    Department: Object
+    Data: Object,
+    multi: Boolean
 })
 
 const emit = defineEmits(['updateItems', 'closed'])
 
 const page = usePage()
 const loading = ref(null)
-const formData = useForm({})
-const items = page.props.departments.filter(e => e.parent_id === props.Department.id)
+const formData = useForm({
+    item: null,
+    ids: null
+})
+const items = page.props.departments.filter(e => e.parent_id === props.Data.id)
 const confirmDelete = () => {
     loading.value = true
-    formData.delete(`/don-vi/${props.Department.id}/xoa`, {
-        only: ['departments', 'flash'],
-        onSuccess: (res) => {
-            toast(res.props.flash.message, {type: res.props.flash.type})
-            emit('updateItems', res.props.departments)
-        },
-        onFinish: () => {
-            loading.value = false
-        }
-    })
+    if (props.multi) {
+        formData.ids = props.Data.map(x => x.id)
+        formData.delete(`/don-vi/multi/xoa`, {
+            only: ['departments', 'flash'],
+            onSuccess: (res) => {
+                toast(res.props.flash.message, {type: res.props.flash.type})
+                emit('updateItems')
+            },
+            onFinish: () => {
+                loading.value = false
+            }
+        })
+    } else {
+        loading.value = true
+        formData.item = props.Data
+        formData.delete(`/don-vi/${formData.item.id}/xoa`, {
+            only: ['departments', 'flash'],
+            onSuccess: (res) => {
+                toast(res.props.flash.message, {type: res.props.flash.type})
+                emit('updateItems')
+            },
+            onFinish: () => {
+                loading.value = false
+            }
+        })
+    }
 }
 const cancelDelete = () => {
     emit('closed')
@@ -44,11 +64,26 @@ onMounted(() => {
         </v-card-title>
 
 
-        <v-card-text class="py-4 text-center">
+        <v-card-text class="py-4 text-center" v-if="props.multi">
+            <div>
+                <b>Bạn đang xóa</b> <br/>
+                <v-chip variant="text" color="info">
+                    <h2 class="font-weight-bold"> {{ props.Data.length }}</h2>
+                </v-chip>
+            </div>
+
+            <div class="mt-3">
+                <b>Đơn vị</b> <br/>
+            </div>
+            <h5 class="mt-5 text-red-darken-2 font-italic">
+                ** Thao tác này không thể hoàn tác.
+            </h5>
+        </v-card-text>
+        <v-card-text class="py-4 text-center" v-else>
             <div>
                 <b>Đơn vị</b> <br/>
                 <v-chip variant="text" color="info">
-                    <h2 class="font-weight-bold">{{ props.Department.name }}</h2>
+                    <h2 class="font-weight-bold">{{ props.Data.name }}</h2>
                 </v-chip>
             </div>
 

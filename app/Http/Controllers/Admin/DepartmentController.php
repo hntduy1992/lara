@@ -76,15 +76,57 @@ class DepartmentController extends Controller
         }
         return redirect()->back();
     }
-    public function destroy(Request $request, $id)
+
+    public function destroy(Request $request)
     {
-        $department  = Department::find($id);
-        if($department){
+        $request->validate(
+            [
+                'item' => 'required'
+            ],
+            [
+                'ids.required' => 'Dữ liệu không hợp lệ',
+            ]
+        );
+        $department = Department::find($request->input('item')['id']);
+        if ($department) {
+            //Xóa child
+            self::removeChild($department->id);
             $department->delete();
             $request->session()->put('flash', ['type' => 'success', 'message' => 'Đã xóa thành công!']);
-        }
-        else {
+        } else {
             $request->session()->put('flash', ['type' => 'error', 'message' => 'Thao tác xóa không thành công!']);
         }
+        return redirect()->back();
+    }
+
+    public function removeChild($parent_id): void
+    {
+        $departmentIds = Department::query()->where('parent_id', $parent_id)->get();
+        foreach ($departmentIds as $item) {
+            $this->removeChild($item->id);
+            $item->delete();
+        }
+    }
+
+    public function destroys(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array'
+        ],
+            [
+                'ids.required' => 'Dữ liệu không hợp lệ',
+                'ids.array' => 'Dữ liệu không hợp lệ',
+            ]);
+        $ids = $request->input('ids');
+        foreach ($ids as $id){
+            $this->removeChild($id);
+        }
+        $deletedCount = Department::whereIn('id', $ids)->delete();
+        if ($deletedCount) {
+            $request->session()->put('flash', ['type' => 'success', 'message' => 'Số lượng ' . $deletedCount . ' đã xóa thành công!']);
+        } else {
+            $request->session()->put('flash', ['type' => 'error', 'message' => 'Thao tác xóa không thành công!']);
+        }
+        return redirect()->back();
     }
 }

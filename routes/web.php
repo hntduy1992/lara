@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [DepartmentController::class, 'index'])->name('department.index');
         Route::post('/them-moi', [DepartmentController::class, 'store'])->name('department.store');
         Route::post('/{id}/cap-nhat', [DepartmentController::class, 'update'])->name('department.update');
+        Route::delete('/multi/xoa', [DepartmentController::class, 'destroys'])->name('department.destroys');
         Route::delete('/{id}/xoa', [DepartmentController::class, 'destroy'])->name('department.destroy');
     });
 });

@@ -72,6 +72,7 @@ onMounted(() => {
             ></v-number-input>
             <v-btn prepend-icon="mdi-home-plus-outline" color="info" class="w-100" @click="submit">Cập nhật
             </v-btn>
+
         </v-card-text>
     </v-card>
 </template>

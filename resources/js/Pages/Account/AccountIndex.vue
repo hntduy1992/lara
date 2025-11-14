@@ -1,69 +1,29 @@
 <script setup>
-import {computed, onMounted, ref, shallowRef, watch} from "vue";
-import {router, useForm, usePage} from "@inertiajs/vue3";
-import CreateDepartmentForm from "@/Pages/Department/CreateDepartmentForm.vue";
-import HierarchicalSorter from "@/Services/buildTree.js";
-import EditDepartmentForm from "@/Pages/Department/EditDepartmentForm.vue";
-import DeleteDepartmentForm from "@/Pages/Department/DeleteDepartmentForm.vue";
+import {usePage} from "@inertiajs/vue3";
+import {ref} from "vue";
 
-const search = ref('')
-const selected = ref([])
-const loading = ref(false)
-const headers = ref([
-    {
-        title: 'Tên đơn vị',
-        sortable: false,
-        key: 'name',
-    },
-    {title: 'Actions', key: 'actions', align: 'center', sortable: false, width: '10%'},
-])
 const page = usePage()
-const items = page.props.departments
-const sorter = new HierarchicalSorter();
-const sortedData = sorter.sort(items);
-const createDialogState = shallowRef(null)
-const updateDialogState = shallowRef(null)
-const deleteDialogState = shallowRef(null)
-const deleteMultiDialogState = shallowRef(null)
 
-const OnUpdateItems = () => {
-    router.visit('/don-vi', {
-        only: ['departments']
-    })
-    createDialogState.value = false
-    updateDialogState.value = false
-    deleteDialogState.value = false
-    deleteMultiDialogState.value = false
-    selected.value = []
-}
+const data = page.props.data
+const headers = [
+    {title: 'username', sortable: false, key: 'username',},
+    {title: 'Họ tên', key: 'ho_ten', align: 'center', sortable: true},
+    {title: 'Điện thoại', key: 'dien_thoai', align: 'center', sortable: false},
+    {title: 'Trạng thái', key: 'is_active', align: 'center', sortable: false},
+    {title: 'Actions', key: 'actions', align: 'center', sortable: false, width: '10%'},
+]
 
-const updateItem = (item) => {
-    selected.value.push(item)
-    updateDialogState.value = true;
-}
-const deleteItem = (item) => {
-    selected.value[0] = item
-    deleteDialogState.value = true
-}
-const deleteItems = () => {
-    deleteMultiDialogState.value = true
-}
-const clearDialog = () => {
-    createDialogState.value = false
-    updateDialogState.value = false
-    deleteDialogState.value = false
-    deleteMultiDialogState.value = false
-    selected.value = []
-}
+const selected = ref(null)
+const search = ref(null)
 </script>
 
 <template>
-    {{ selected }}
     <v-data-table
         v-model="selected"
         :headers="headers"
-        :items="sortedData"
+        :items="data"
         :search="search"
+        item-value="name"
         return-object
         show-select
         :items-per-page="-1"
@@ -103,10 +63,10 @@ const clearDialog = () => {
                             v-bind="activatorProps"
                         ></v-btn>
                     </template>
-                    <CreateDepartmentForm @updateItems="OnUpdateItems"></CreateDepartmentForm>
+                    <CreateAccountForm @updateItems="OnCreateItems"></CreateAccountForm>
                 </v-dialog>
 
-                <v-badge v-if="selected.length>=2" bordered location="top left">
+                <v-badge v-if="selected.length" bordered location="top left">
                     <template v-slot:badge>
                         {{ selected.length }}
                     </template>
@@ -118,7 +78,6 @@ const clearDialog = () => {
                         border
                         variant="elevated"
                         color="red"
-                        @click="deleteItems"
                     ></v-btn>
                 </v-badge>
             </v-toolbar>
@@ -137,6 +96,7 @@ const clearDialog = () => {
         </template>
         <template v-slot:item.actions="{ item }">
             <div class="d-flex ga-2 justify-center">
+
                 <v-btn @click="updateItem(item)" color="warning" icon="mdi-pencil" variant="text"
                        size="small"></v-btn>
 
@@ -146,16 +106,11 @@ const clearDialog = () => {
         </template>
     </v-data-table>
     <v-dialog max-width="400" v-model="updateDialogState">
-        <EditDepartmentForm :Department="selected[0]" @updateItems="OnUpdateItems" persistent
-                            @closed="clearDialog"></EditDepartmentForm>
+        <EditAccountForm :Department="itemUD" @updateItems="OnUpdateItems"></EditAccountForm>
     </v-dialog>
     <v-dialog max-width="400" v-model="deleteDialogState">
-        <DeleteDepartmentForm :Data="selected[0]" :multi="false" @updateItems="OnUpdateItems" persistent
-                              @closed="clearDialog"></DeleteDepartmentForm>
-    </v-dialog>
-    <v-dialog max-width="400" v-model="deleteMultiDialogState" v-if="selected.length>=2" persistent>
-        <DeleteDepartmentForm :Data="selected" :multi="true" @updateItems="OnUpdateItems"
-                              @closed="clearDialog"></DeleteDepartmentForm>
+        <DeleteAccountForm :Department="itemUD" @updateItems="OnUpdateItems"
+                           @closed="deleteDialogState=false"></DeleteAccountForm>
     </v-dialog>
 </template>
 
